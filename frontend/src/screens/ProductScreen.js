@@ -1,29 +1,42 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import {Row,Col,Image,ListGroup,Button,Card} from 'react-bootstrap';
 import Rating from '../components/Rating';
-import products from '../products';
 
+
+import axios from 'axios'
 import {useParams } from 'react-router-dom'
 
 
 
 function ProductScreen(){
 
-    const params=useParams();
+    const params=useParams(); //returns a dict
     console.log(params)
     const {id }=useParams();
 
-    const product=products.find((p)=>p._id == id)
+    const [product,setProduct]=useState([])
+
+    useEffect(()=>{
+        async function fetchproduct(){
+           const {data}= await axios.get(`/api/products/${id}`)
+           setProduct(data)
+        }
+       fetchproduct()
+    },[])
+
+    
+
+    // const product=products.find((p)=>p._id == id)
     return(
         <div>
           
            <Link to='/' className='btn btn-light my-3'>Go Back</Link>
            <Row>
-                <Col md={6} >
+                <Col md={6} sm={12} >
                     <Image src={product.image} alt={product.name}/>
                 </Col>
-                <Col md={3} >
+                <Col md={3} sm={12} >
                   <ListGroup variant='flush'>
                         <ListGroup.Item>
                         <h3>{product.name}</h3>
@@ -43,7 +56,7 @@ function ProductScreen(){
                    
                   </ListGroup>
                 </Col>
-                <Col md={3} >
+                <Col md={3} sm={12}>
                     <Card>
                         <ListGroup variant='flush'>
                             <ListGroup.Item>
